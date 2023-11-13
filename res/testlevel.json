@@ -1,0 +1,23 @@
+{
+    "world": [
+        {
+            "transform": {
+                "scale": [
+                    1.000000,
+                    1.000000
+                ],
+                "rot": 0.000000,
+                "loc": [
+                    0,
+                    0
+                ]
+            }
+        }
+    ],
+    "textures": [
+        {
+            "file": "res/textures/background.png",
+            "name": "background"
+        }
+    ]
+}

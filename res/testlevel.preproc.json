@@ -1,0 +1,16 @@
+{
+    "textures": {
+        "background": "res/textures/background.png"
+    },
+
+    "world": [
+        {
+            "loc": [0, 0],
+            "box": {
+                "color": [100, 0, 0],
+                "size": [200, 200],
+                "depth": 10
+            }
+        }
+    ]
+}
