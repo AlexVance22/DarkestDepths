@@ -1,62 +1,57 @@
-#include "core/mod.h"
-#include "sprite.h"
+#pragma once
+#include "pch.h"
+#include "graphics/sprite.h"
+#include "physics/movement.h"
+#include "entity/item.h"
 
 
-struct SoulMovement {
-    f32 value;
+enum class EntityKind {
+    World  = 1,
+    Player = 1 << 1,
+    Item   = 1 << 2,
+    Soul   = 1 << 3,
+    Wraith = 1 << 4,
+    Boss   = 1 << 5,
 };
 
-struct WraithMovement {
-    f32 value;
-};
-
-struct PlayerMovement {
-    f32 value;
-};
-
-struct BossMovement {
-};
-
-struct ItemMovement {
-};
-
-
-struct Movement {
-    enum {
-        Soul,
-        Wraith,
-        Boss,
-        Item,
-        Player,
-    } kind;
-
-    union {
-        SoulMovement soul;
-        WraithMovement wraith;
-        BossMovement boss;
-        ItemMovement item;
-        PlayerMovement player;
-    } data;
-
-    static Movement soul(SoulMovement m) { Movement res; res.kind = Movement::Soul; res.data.soul = m; return res; }
-    static Movement wraith(WraithMovement m) { Movement res; res.kind = Movement::Wraith; res.data.wraith = m; return res; }
-    static Movement boss(BossMovement m) { Movement res; res.kind = Movement::Boss; res.data.boss = m; return res; }
-    static Movement item(ItemMovement m) { Movement res; res.kind = Movement::Item; res.data.item = m; return res; }
-    static Movement player(PlayerMovement m) { Movement res; res.kind = Movement::Player; res.data.player = m; return res; }
-};
+Variant(EntityData,
+    PlayerData,
+    ItemData
+);
 
 
 class Entity
 {
 private:
-    Sprite sprite;
-    Movement movement;
+    EntityKind m_kind;
+    b2Body* m_rigidbody;
+    Sprite m_sprite;
+    Movement m_movement;
+    EntityData m_data;
+    bool m_destroy = false;
+
+    Entity(EntityKind kind, b2Body* rigidbody): m_kind(kind), m_rigidbody(rigidbody) {}
 
 public:
-    Entity();
+    static Entity new_player(b2Body* rb);
+    static Entity new_item(b2Body* rb);
+    static Entity new_soul(b2Body* rb);
 
-    const Sprite& get_sprite() const { return sprite; }
+    Sprite& get_sprite() { return m_sprite; }
+    const Sprite& get_sprite() const { return m_sprite; }
+    Movement& get_controller() { return m_movement; }
+    const Movement& get_controller() const { return m_movement; }
+    b2Body* get_body();
+    const b2Body* get_body() const;
 
+    void collide(b2Fixture* self, b2Fixture* other);
+    void decollide(b2Fixture* self, b2Fixture* other);
+
+    bool destroy() const { return m_destroy; }
+
+    void handle_event(const sf::Event& event);
     void update(const f32 dt);
+
+    friend struct PlayerController;
 };
 

@@ -6,11 +6,11 @@
 -Wfloat-equal
 -Wno-unused-const-variable
 -Wno-sign-conversion
--std=c++17
+-std=c++20
 -xc++
 
 -Isrc
 -Ilib/SFML/include
 -Ilib/box2d/include
--Ilib/rustjson
+-Ilib/rusty/include
 
